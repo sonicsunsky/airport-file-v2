@@ -29,7 +29,7 @@ module.exports = {
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
   publicPath:
-    process.env.NODE_ENV === "production" ? "/by-industrial-super/" : "/",
+    process.env.NODE_ENV === "production" ? "/airport-file-cli/" : "/",
   outputDir: "dist",
   assetsDir: "static",
   lintOnSave: process.env.NODE_ENV === "development",
