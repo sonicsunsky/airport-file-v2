@@ -1,0 +1,67 @@
+$el-primary: #409eff;
+$el-primary-light: #b6daf2; //,#cae2fc
+$el-primary-lighter: #dae8f6;
+$el-primary-dark: #2068c2;
+
+$el-success: #67c23a;
+$el-success-light: #e4f1da;
+$el-success-lighter: #f2f9ec;
+
+$el-warning: #ef8c66;
+$el-warning-light: #f8ecda;
+$el-warning-lighter: #fcf6ed;
+
+$el-danger: #e23f42;
+$el-danger-light: #f9e3e2;
+$el-danger-lighter: #fcf0f0;
+
+$el-info: #909399;
+$el-info-light: #e9e9eb;
+$el-info-lighter: #f4f4f5;
+
+$el-bg: #ecf3f9;
+
+$el-primary-text: #303133;
+$el-regular-text: #606266;
+$el-secondary-text: #909399;
+$el-placeholder: #c0c4cc;
+
+$el-border-base: #dcdfe6;
+$el-border-light: #e4e7ed;
+$el-border-lighter: #ebeef5;
+
+// base color
+$blue: #324157;
+$light-blue: #3a71a8;
+$red: #c03639;
+$pink: #e65d6e;
+$green: #30b08f;
+$tiffany: #4ab7bd;
+$yellow: #fec171;
+$panGreen: #30b08f;
+
+// sidebar
+$menuText: #bfcbd9;
+$menuActiveText: #409eff;
+$subMenuActiveText: #f4f4f5; // https://github.com/ElemeFE/element/issues/12951
+
+$menuBg: #304156;
+$menuHover: #263445;
+
+$subMenuBg: #1f2d3d;
+$subMenuHover: #001528;
+
+$sideBarWidth: 260px;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}

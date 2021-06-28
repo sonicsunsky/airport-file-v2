@@ -1,0 +1,45 @@
+.dashboard {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: $el-bg;
+
+  &-filter {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+
+    .title {
+      font-size: 16px;
+    }
+
+    .date {
+      display: flex;
+      align-items: center;
+
+      .tag {
+        font-size: 14px;
+        padding-bottom: 6px;
+        transition: all 0.5s;
+        margin-right: 30px;
+        cursor: pointer;
+
+        &.active {
+          font-weight: bold;
+          color: $el-primary-dark;
+          border-bottom: 4px solid $el-primary-dark;
+        }
+      }
+    }
+  }
+
+  .el-row {
+    margin-bottom: 20px;
+  }
+}
