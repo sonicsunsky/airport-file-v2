@@ -249,12 +249,14 @@ export default {
     },
     openFileDetail({ url }) {
       if (url) {
-        window.open(url, "_blank");
+        // window.open(url);
+        window.location.href = url;
       }
     },
     downloadFile({ link }) {
       if (link) {
-        window.open(link, "_blank");
+        // window.open(link);
+        window.location.href = link;
       }
       // const title = `确定要解封${account}账号吗？`;
       // this.$confirm(`点击确定后该账号将可使用`, title, {
