@@ -213,10 +213,7 @@ export default {
       showDisclaimer: false,
       showPDFViewer: false,
       numPages: 0,
-      baseUrl:
-        process.env.NODE_ENV === "production"
-          ? "/airport-file-cli/web/viewer.html?file="
-          : "/web/viewer.html?file=",
+      baseUrl: `/web/viewer.html?file=`,
       pdfSrc: "",
       keyword: "",
       defaultProps: {
