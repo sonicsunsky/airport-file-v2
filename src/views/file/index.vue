@@ -218,7 +218,7 @@ export default {
       numPages: 0,
       baseUrl:
         process.env.NODE_ENV === "production"
-          ? "./web/viewer.html?file="
+          ? "web/viewer.html?file="
           : "/web/viewer.html?file=",
       pdfSrc: "",
       keyword: "",
