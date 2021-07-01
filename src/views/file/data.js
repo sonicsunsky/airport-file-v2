@@ -1,5 +1,10 @@
 import dayjs from "dayjs";
 
+const downloadUrl =
+  process.env.NODE_ENV === "production"
+    ? `https://github.com/sonicsunsky/airport-file-cli/blob/main/docs/pdf/test1.pdf`
+    : `/pdf/test1.pdf`;
+
 export const createTableData = size => {
   return new Array(size).fill("").map((item, index) => {
     return {
@@ -9,8 +14,8 @@ export const createTableData = size => {
       status: Math.random() > 0.5 ? "read" : "unread",
       date: dayjs().format("YYYY-MM-DD HH:mm:ss"), //YYYY-MM-DD HH:mm:ss
       mime: `application/pdf`,
-      download_url: `/pdf/test1.pdf`, //files[index % 4],
-      href: `/pdf/test1.pdf`
+      download_url: downloadUrl, //files[index % 4],
+      href: downloadUrl
     };
   });
 };

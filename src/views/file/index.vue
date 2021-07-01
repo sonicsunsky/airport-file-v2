@@ -214,9 +214,6 @@ export default {
       showPDFViewer: false,
       numPages: 0,
       baseUrl: `/web/viewer.html?file=`,
-      // process.env.NODE_ENV === "production"
-      //   ? ""
-      //   : "/web/viewer.html?file=",
       pdfSrc: "",
       keyword: "",
       defaultProps: {
