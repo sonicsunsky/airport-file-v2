@@ -210,7 +210,6 @@ export default {
     Pagination
   },
   data() {
-    console.log(path.resolve());
     //https://github.com/sonicsunsky/airport-file-cli/blob/main/docs
     return {
       showDisclaimer: false,
@@ -278,6 +277,8 @@ export default {
     openFileDetail({ href = "" }) {
       this.pdfSrc = href;
       this.showPDFViewer = true;
+      console.log(path.resolve());
+      console.log(this.baseUrl + this.pdfSrc);
       // const loadingTask = pdf.createLoadingTask(href);
       // this.pdfSrc = loadingTask;
       // loadingTask.promise
