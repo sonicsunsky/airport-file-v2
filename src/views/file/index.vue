@@ -201,6 +201,7 @@
 import { treeData, createTableData } from "./data";
 import Pagination from "@/components/Pagination";
 // import pdf from "vue-pdf";
+import path from "path";
 
 export default {
   name: "File",
@@ -209,13 +210,15 @@ export default {
     Pagination
   },
   data() {
+    console.log(path.resolve());
+    //https://github.com/sonicsunsky/airport-file-cli/blob/main/docs
     return {
       showDisclaimer: false,
       showPDFViewer: false,
       numPages: 0,
       baseUrl:
         process.env.NODE_ENV === "production"
-          ? "https://github.com/sonicsunsky/airport-file-cli/blob/main/docs/web/viewer.html?file="
+          ? "./web/viewer.html?file="
           : "/web/viewer.html?file=",
       pdfSrc: "",
       keyword: "",

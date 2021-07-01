@@ -1,9 +1,8 @@
 import dayjs from "dayjs";
 
+//https://github.com/sonicsunsky/airport-file-cli/blob/main/docs
 const downloadUrl =
-  process.env.NODE_ENV === "production"
-    ? `https://github.com/sonicsunsky/airport-file-cli/blob/main/docs/pdf/test1.pdf`
-    : `/pdf/test1.pdf`;
+  process.env.NODE_ENV === "production" ? `./pdf/test1.pdf` : `/pdf/test1.pdf`;
 
 export const createTableData = size => {
   return new Array(size).fill("").map((item, index) => {
