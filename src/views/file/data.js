@@ -7,9 +7,10 @@ export const createTableData = size => {
       role: Math.random() > 0.5 ? "admin" : "visitor",
       name: `机场文件${index + 1}`,
       status: Math.random() > 0.5 ? "read" : "unread",
-      date: dayjs().format("YYYY-MM-DD"), //YYYY-MM-DD HH:mm:ss
-      link: `http://www.leomay.com/upload/file/mmo-20170707165001.pdf`,
-      url: `http://www.pwithe.com/Public/Upload/download/20170211/589ebf8e5bb13.pdf`
+      date: dayjs().format("YYYY-MM-DD HH:mm:ss"), //YYYY-MM-DD HH:mm:ss
+      mime: `application/pdf`,
+      download_url: `/pdf/test1.pdf`, //files[index % 4],
+      href: `/pdf/test1.pdf`
     };
   });
 };

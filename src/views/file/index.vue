@@ -22,6 +22,15 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="PDF预览" :visible.sync="showPDFViewer" width="90%" center>
+      <iframe
+        width="100%"
+        height="500"
+        scrolling="no"
+        :src="`${baseUrl}${pdfSrc}`"
+      ></iframe>
+    </el-dialog>
+
     <template v-if="device === 'mobile'">
       <div class="lay-mobile">
         <el-tree
@@ -71,14 +80,18 @@
 
             <el-table-column label="操作">
               <template slot-scope="{ row }">
-                <el-button type="text" @click="openFileDetail(row)"
+                <el-button
+                  type="text"
+                  icon="el-icon-view"
+                  @click="openFileDetail(row)"
                   >查看详情</el-button
                 >
 
                 <el-button
                   v-if="row.role === 'admin'"
                   type="text"
-                  @click="downloadFile(row)"
+                  icon="el-icon-download"
+                  @click="handleDownloadFile(row)"
                   >下载</el-button
                 >
               </template>
@@ -151,14 +164,18 @@
 
                 <el-table-column label="操作">
                   <template slot-scope="{ row }">
-                    <el-button type="text" @click="openFileDetail(row)"
+                    <el-button
+                      type="text"
+                      icon="el-icon-view"
+                      @click="openFileDetail(row)"
                       >查看详情</el-button
                     >
 
                     <el-button
                       v-if="row.role === 'admin'"
                       type="text"
-                      @click="downloadFile(row)"
+                      icon="el-icon-download"
+                      @click="handleDownloadFile(row)"
                       >下载</el-button
                     >
                   </template>
@@ -181,15 +198,26 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
 import { treeData, createTableData } from "./data";
 import Pagination from "@/components/Pagination";
+// import pdf from "vue-pdf";
 
 export default {
   name: "File",
+  components: {
+    // pdf,
+    Pagination
+  },
   data() {
     return {
       showDisclaimer: false,
+      showPDFViewer: false,
+      numPages: 0,
+      baseUrl:
+        process.env.NODE_ENV === "production"
+          ? "/airport-file-cli/web/viewer.html?file="
+          : "/web/viewer.html?file=",
+      pdfSrc: "",
       keyword: "",
       defaultProps: {
         children: "children",
@@ -210,9 +238,6 @@ export default {
     device() {
       return this.$store.state.app.device;
     }
-  },
-  components: {
-    Pagination
   },
   created() {},
   mounted() {
@@ -247,27 +272,30 @@ export default {
       this.generateTableData();
       // this.getFileList();
     },
-    openFileDetail({ url }) {
-      if (url) {
-        // window.open(url);
-        window.location.href = url;
-      }
+    openFileDetail({ href = "" }) {
+      this.pdfSrc = href;
+      this.showPDFViewer = true;
+      // const loadingTask = pdf.createLoadingTask(href);
+      // this.pdfSrc = loadingTask;
+      // loadingTask.promise
+      //   .then((pdf) => {
+      //     this.numPages = pdf.numPages;
+      //     this.showPDFViewer = true;
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     },
-    downloadFile({ link }) {
-      if (link) {
-        // window.open(link);
-        window.location.href = link;
-      }
-      // const title = `确定要解封${account}账号吗？`;
-      // this.$confirm(`点击确定后该账号将可使用`, title, {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // }).then(({ value }) => {
-      //   this.unblockUserAccount(author_id);
-      // });
+    handleDownloadFile({ download_url = "", name = "" }) {
+      console.log(download_url);
+      let eLink = document.createElement("a");
+      eLink.style.display = "none";
+      eLink.href = download_url;
+      eLink.setAttribute("download", name); //设置下载属性 以及文件名
+      document.body.appendChild(eLink);
+      eLink.click();
+      document.body.removeChild(eLink);
     },
-
     loadNode(node, resolve) {
       if (node.level === 0) {
         return resolve([{ name: "region1" }, { name: "region2" }]);
@@ -300,116 +328,6 @@ export default {
 
         resolve(data);
       }, 500);
-    },
-    async getFileList() {
-      let startTime = "";
-      let endTime = "";
-      let meta = {
-        relation: "AND",
-        0: {
-          key: "is_blocked", //固定值
-          value: "1", //固定值
-          type: "numeric",
-          compare: "="
-        }
-      };
-      if (this.endTime === 1) {
-        startTime = dayjs().format("YYYY-MM-DD");
-        endTime = dayjs().format("YYYY-MM-DD");
-      }
-      if (this.endTime === 2) {
-        startTime = dayjs()
-          .startOf("month")
-          .format("YYYY-MM-DD");
-        endTime = dayjs()
-          .endOf("month")
-          .format("YYYY-MM-DD");
-      }
-      if (this.endTime === 3) {
-        startTime = dayjs()
-          .subtract(3, "month")
-          .format("YYYY-MM-DD");
-        endTime = dayjs().format("YYYY-MM-DD");
-      }
-      if (this.endTime === 4) {
-        startTime = dayjs()
-          .subtract(6, "month")
-          .format("YYYY-MM-DD");
-        endTime = dayjs().format("YYYY-MM-DD");
-      }
-      if (this.endTime === 5) {
-        endTime = dayjs()
-          .subtract(6, "month")
-          .format("YYYY-MM-DD");
-      }
-      let index = 0; //索引位置
-      if (startTime !== "") {
-        index++;
-        meta[index] = {
-          key: "blocked_time", //查询时间范围----开始时间
-          value: startTime, //自行修改
-          type: "DATETIME",
-          compare: ">="
-        };
-      }
-      if (endTime !== "") {
-        index++;
-        meta[index] = {
-          key: "blocked_time", //查询时间范围----结束时间
-          value: endTime, //自行修改
-          type: "DATETIME",
-          compare: "<="
-        };
-      }
-      const params = {
-        search: this.keyword,
-        meta_query: meta
-      };
-      const res = await this.$Api.getFileList(params);
-      console.log(res);
-      if (res.data.list) this.handleUserData(res.data);
-      else {
-        this.userList = [];
-        this.total = +res.data.count;
-      }
-    },
-    handleUserData(data = {}) {
-      const arr = data.list.map(item => {
-        return {
-          author_id: item.basic.ID,
-          account: item.basic.display_name,
-          status: item.custom.is_blocked ? item.custom.is_blocked[0] : "0",
-          block_reason: item.custom.blocked_reason
-            ? item.custom.blocked_reason[0]
-            : "",
-          block_detail: item.custom.description
-            ? item.custom.description[0]
-            : "",
-          date: item.custom.blocked_time
-            ? item.custom.blocked_time[0].slice(0, 10)
-            : ""
-        };
-      });
-      this.userList = [...arr];
-      this.total = +data.count;
-    },
-    async unblockUserAccount(author_id) {
-      const params = {
-        user_id: author_id,
-        meta_arr: {
-          is_blocked: "0" //1表示被禁用，0或者null都表示未禁用
-        }
-      };
-      const res = await this.$Api.updateUserStatus(params);
-      console.log(res);
-      await this.getFileList();
-      if (+res.errCode === 0) {
-        this.$message({
-          type: "success",
-          message: "解封成功"
-        });
-        this.getFileList();
-      }
     }
   }
 };

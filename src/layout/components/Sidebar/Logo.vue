@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      title: "河南郑州机场培训手册",
+      title: "机场文件管理系统",
       logo: require("@/assets/images/logo.png")
     };
   }

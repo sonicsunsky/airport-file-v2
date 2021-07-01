@@ -58,12 +58,13 @@ export const constantRoutes = [
     path: "/",
     component: Layout,
     redirect: "/file",
+    meta: { title: "首页", icon: "home" },
     children: [
       {
         path: "file",
         component: () => import("@/views/file/index"),
         name: "File",
-        meta: { title: "培训手册", icon: "home" }
+        meta: { title: "文件管理", icon: "home" }
       }
     ]
   },

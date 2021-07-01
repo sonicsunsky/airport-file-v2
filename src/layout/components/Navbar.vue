@@ -18,11 +18,21 @@
             <el-dropdown-item>
               {{ userInfo.display_name }}
             </el-dropdown-item>
-            <el-dropdown-item class="clearfix">
-              未读文件
-              <el-badge class="mark" :value="10" :max="99" />
+            <el-dropdown-item>
+              已读
+              <el-badge :value="readCount" type="success" />
             </el-dropdown-item>
-            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+            <el-dropdown-item>
+              未读
+              <el-badge :value="unreadCount" type="danger" />
+            </el-dropdown-item>
+            <el-dropdown-item>
+              可读
+              <el-badge :value="allCount" type="primary" />
+            </el-dropdown-item>
+            <el-dropdown-item @click.native="logout" divided
+              >退出登录</el-dropdown-item
+            >
           </template>
         </el-dropdown-menu>
       </el-dropdown>
@@ -38,7 +48,10 @@ export default {
   data() {
     return {
       hasLogin: false,
-      userInfo: {}
+      userInfo: {},
+      readCount: 10,
+      unreadCount: 20,
+      allCount: 30
     };
   },
   components: {
