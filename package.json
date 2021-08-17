@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "preview": "serve -s dist",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "dependencies": {
@@ -14,14 +15,18 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.10.4",
     "echarts": "^5.0.2",
-    "element-ui": "^2.15.0",
+    "element-ui": "^2.15.3",
+    "global": "^4.4.0",
     "js-cookie": "^2.2.1",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "path-to-regexp": "^6.2.0",
+    "pdfjs-dist": "^2.8.335",
+    "serve": "^12.0.0",
     "vue": "^2.6.11",
     "vue-count-to": "^1.0.13",
     "vue-router": "^3.2.0",
+    "vue-video-player": "^5.0.2",
     "vuex": "^3.4.0"
   },
   "devDependencies": {

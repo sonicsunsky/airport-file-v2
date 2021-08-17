@@ -1,10 +1,13 @@
 <template>
   <div class="file">
+    <!-- 如果 visible 属性绑定的变量位于 Vuex 的 store 内，那么 .sync 不会正常工作。 -->
+    <!-- 此时需要去除 .sync 修饰符，同时监听 Dialog 的 open 和 close 事件，在事件回调中执行 Vuex 中对应的 mutation 更新 visible 属性绑定的变量的值 -->
     <el-dialog
       title="免责声明弹窗"
-      :visible.sync="showDisclaimer"
+      :visible="disclaimer"
       width="50%"
       center
+      @close="closeDisclaimer"
       :show-close="false"
       :close-on-press-escape="false"
       :close-on-click-modal="false"
@@ -12,24 +15,24 @@
       <div class="disclaimer">
         <span>
           免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明
-          免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明
+          免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明免责声明
         </span>
       </div>
       <div slot="footer" class="disclaimer-footer">
-        <el-button type="primary" @click="showDisclaimer = false"
+        <el-button type="primary" @click="closeDisclaimer"
           >我已阅读以上免责声明</el-button
         >
       </div>
     </el-dialog>
 
-    <el-dialog title="PDF预览" :visible.sync="showPDFViewer" width="90%" center>
+    <!-- <el-dialog title="PDF预览" :visible.sync="showPDFViewer" width="90%" center>
       <iframe
         width="100%"
         height="500"
         scrolling="no"
         :src="`${baseUrl}${pdfSrc}`"
       ></iframe>
-    </el-dialog>
+    </el-dialog> -->
 
     <template v-if="device === 'mobile'">
       <div class="lay-mobile">
@@ -198,10 +201,9 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { treeData, createTableData } from "./data";
 import Pagination from "@/components/Pagination";
-// import pdf from "vue-pdf";
-import path from "path";
 
 export default {
   name: "File",
@@ -212,14 +214,6 @@ export default {
   data() {
     //https://github.com/sonicsunsky/airport-file-cli/blob/main/docs
     return {
-      showDisclaimer: false,
-      showPDFViewer: false,
-      numPages: 0,
-      baseUrl:
-        process.env.NODE_ENV === "production"
-          ? "web/viewer.html?file="
-          : "/web/viewer.html?file=",
-      pdfSrc: "",
       keyword: "",
       defaultProps: {
         children: "children",
@@ -237,6 +231,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["disclaimer"]),
     device() {
       return this.$store.state.app.device;
     }
@@ -248,10 +243,13 @@ export default {
     this.generateTableData();
   },
   methods: {
+    closeDisclaimer() {
+      this.$store.dispatch("app/closeDisclaimer");
+    },
     generateTableData() {
       this.tableLoading = true;
       const size = Math.floor(Math.random() * 10 + 1);
-      console.log(size);
+      // console.log(size);
       setTimeout(() => {
         const list = createTableData(size);
         this.fileList = [...list];
@@ -259,7 +257,7 @@ export default {
       }, 500);
     },
     handleTreeNodeClick(e) {
-      console.log(e);
+      // console.log(e);
       this.generateTableData();
     },
     onSearchFileList() {
@@ -274,11 +272,12 @@ export default {
       this.generateTableData();
       // this.getFileList();
     },
-    openFileDetail({ href = "" }) {
-      this.pdfSrc = href;
-      this.showPDFViewer = true;
-      console.log(path.resolve());
-      console.log(this.baseUrl + this.pdfSrc);
+    openFileDetail({ href = "", mime }) {
+      this.$router
+        .push({ path: "/document", query: { href, mime } })
+        .catch(() => {});
+      // this.pdfSrc = href;
+      // this.showPDFViewer = true;
       // const loadingTask = pdf.createLoadingTask(href);
       // this.pdfSrc = loadingTask;
       // loadingTask.promise

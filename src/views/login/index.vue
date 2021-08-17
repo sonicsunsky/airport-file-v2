@@ -1,9 +1,5 @@
 <template>
   <div class="login">
-    <div class="login-bk">
-      <div class="login-bk-shadow"></div>
-    </div>
-
     <div class="login-container">
       <el-form
         ref="userLoginForm"
@@ -107,7 +103,7 @@ export default {
           this.$store
             .dispatch("user/login", params)
             .then(res => {
-              if (+res.code === 0) {
+              if (res.code === 100) {
                 this.$message.success("登录成功");
                 this.$router.push({ path: this.redirect || "/" });
               } else {

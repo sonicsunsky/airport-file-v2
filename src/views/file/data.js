@@ -1,8 +1,17 @@
 import dayjs from "dayjs";
 
 //https://github.com/sonicsunsky/airport-file-cli/blob/main/docs
+//http://by1.hjlinfo.top
 const downloadUrl =
-  process.env.NODE_ENV === "production" ? `pdf/test1.pdf` : `/pdf/test1.pdf`;
+  process.env.NODE_ENV === "production"
+    ? `http://by1.hjlinfo.top/pdf/compressed.tracemonkey-pldi-09.pdf`
+    : `http://localhost:9527/pdf/compressed.tracemonkey-pldi-09.pdf`;
+
+const mimeList = ["pdf", "video", "image"];
+// const videoList = [
+//   "http://vjs.zencdn.net/v/oceans.mp4",
+//   "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
+// ];
 
 export const createTableData = size => {
   return new Array(size).fill("").map((item, index) => {
@@ -12,8 +21,8 @@ export const createTableData = size => {
       name: `机场文件${index + 1}`,
       status: Math.random() > 0.5 ? "read" : "unread",
       date: dayjs().format("YYYY-MM-DD HH:mm:ss"), //YYYY-MM-DD HH:mm:ss
-      mime: `application/pdf`,
-      download_url: downloadUrl, //files[index % 4],
+      mime: mimeList[index % 3],
+      download_url: downloadUrl,
       href: downloadUrl
     };
   });

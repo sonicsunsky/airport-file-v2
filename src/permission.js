@@ -3,15 +3,21 @@ import store from "./store";
 import { Message } from "element-ui";
 import NProgress from "nprogress"; // progress bar
 import "nprogress/nprogress.css"; // progress bar style
-import { getStorage } from "@/utils/auth"; // get token from cookie
+import { getStorage, setStorage } from "@/utils/auth"; // get token from cookie
 import getPageTitle from "@/utils/get-page-title";
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-const whiteList = ["/login"]; // no redirect whitelist
-const permissionRoles = ["administrator", "editor"];
+const whiteList = ["/login", "/file", "/document"]; // no redirect whitelist
+// const permissionRoles = ["administrator", "editor"];
 
 router.beforeEach(async (to, from, next) => {
+  console.log("router.beforeEach: ", to);
+  if (to.path === "/file") {
+    if (to.query.token) {
+      setStorage("token", to.query.token);
+    }
+  }
   // start progress bar
   NProgress.start();
 
@@ -21,23 +27,15 @@ router.beforeEach(async (to, from, next) => {
   // determine whether the user has logged in
   const hasToken = getStorage("token") || "";
   console.log("hasToken: ", hasToken);
-  const userInfo = getStorage("userInfo") || {};
-  const userRole = userInfo.user_role || "";
+  // const userInfo = getStorage("userInfo") || {};
+  // const userRole = userInfo.user_role || "";
 
   if (hasToken) {
-    if (permissionRoles.includes(userRole)) {
+    if (whiteList.indexOf(to.path) !== -1) {
       next();
     } else {
-      if (whiteList.indexOf(to.path) !== -1) {
-        next();
-      } else {
-        Message({
-          message: "您没有管理员的权限",
-          type: "error"
-        });
-        next(`/login?redirect=${to.fullPath}`);
-        NProgress.done();
-      }
+      next(`/login?redirect=${to.fullPath}`);
+      NProgress.done();
     }
   } else {
     /* has no token*/

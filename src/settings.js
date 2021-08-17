@@ -1,5 +1,5 @@
 module.exports = {
-  title: "青岛市工业互联网微服务平台",
+  title: "机场文件管理系统",
 
   /**
    * @type {boolean} true | false

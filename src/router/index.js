@@ -54,6 +54,7 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
+
   {
     path: "/",
     component: Layout,
@@ -67,6 +68,13 @@ export const constantRoutes = [
         meta: { title: "文件管理", icon: "home" }
       }
     ]
+  },
+  {
+    path: "/document",
+    component: () => import("@/views/document/index"),
+    name: "Document",
+    hidden: true,
+    meta: { title: "文档详情", icon: "home" }
   },
 
   // 404 page must be placed at the end !!!

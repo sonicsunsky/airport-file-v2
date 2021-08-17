@@ -7,7 +7,7 @@ import "./plugins";
 import "@/styles/index.scss"; // global css
 
 import "@/icons"; // icon
-// import "@/permission"; // permission control
+import "@/permission"; // permission control
 
 import App from "./App.vue";
 import router from "./router";

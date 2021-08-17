@@ -43,9 +43,9 @@ const actions = {
       method: "POST",
       data
     });
-    if (+res.code === 0) {
-      commit("setToken", res.content.token);
-      commit("setUserInfo", res.content);
+    if (res.code === 100) {
+      // commit("setToken", res.content.token);
+      // commit("setUserInfo", res.content);
     }
     return res;
   },

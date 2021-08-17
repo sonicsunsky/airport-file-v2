@@ -8,10 +8,17 @@ const state = {
     withoutAnimation: false
   },
   device: "desktop",
-  size: Cookies.get("size") || "medium"
+  size: Cookies.get("size") || "medium",
+  disclaimer: true
 };
 
 const mutations = {
+  OPEN_DISCLAIMER: state => {
+    state.disclaimer = true;
+  },
+  CLOSE_DISCLAIMER: state => {
+    state.disclaimer = false;
+  },
   TOGGLE_SIDEBAR: state => {
     state.sidebar.opened = !state.sidebar.opened;
     state.sidebar.withoutAnimation = false;
@@ -36,6 +43,12 @@ const mutations = {
 };
 
 const actions = {
+  openDisclaimer({ commit }) {
+    commit("OPEN_DISCLAIMER");
+  },
+  closeDisclaimer({ commit }) {
+    commit("CLOSE_DISCLAIMER");
+  },
   toggleSideBar({ commit }) {
     commit("TOGGLE_SIDEBAR");
   },
