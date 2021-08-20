@@ -28,8 +28,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath:
-    process.env.NODE_ENV === "production" ? "/airport-file-cli/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/airport-file-v2/" : "/",
   outputDir: "docs",
   assetsDir: "static",
   lintOnSave: process.env.NODE_ENV === "development",
