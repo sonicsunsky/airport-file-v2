@@ -30,7 +30,7 @@ module.exports = {
    */
   publicPath:
     process.env.NODE_ENV === "production" ? "/airport-file-cli/" : "/",
-  outputDir: "dist",
+  outputDir: "docs",
   assetsDir: "static",
   lintOnSave: process.env.NODE_ENV === "development",
   productionSourceMap: true,

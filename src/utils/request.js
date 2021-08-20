@@ -1,6 +1,7 @@
 import axios from "axios";
 import store from "@/store";
 import router from "@/router";
+import Config from "@/config";
 import { Loading, Message } from "element-ui";
 import { getStorage, setStorage } from "@/utils/auth";
 import qs from "qs";
@@ -10,10 +11,11 @@ let loadingInstance = null;
 // prod: 'https://jc.cgoport.com/airport/api/v1.0',
 
 console.log(process.env);
+
 const baseURL =
   process.env.NODE_ENV === "development"
-    ? "http://by2.hjlinfo.top/airport/api/v1.0"
-    : "https://jc.cgoport.com/airport/api/v1.0";
+    ? Config.baseUrl.dev
+    : Config.baseUrl.prod;
 
 // create an axios instance
 const service = axios.create({
@@ -68,21 +70,21 @@ service.interceptors.response.use(
   error => {
     loadingInstance && loadingInstance.close();
     console.log("err: ", error.response);
-    // const status = error.response.status;
-    // const code = error.response.data.code; //"rest_forbidden"
-    // console.log("router.currentRoute: ", router.currentRoute);
-    // if (status === 401 && code === 401) {
-    //   if (router.currentRoute.fullPath.indexOf("/login") === -1) {
-    //     Message({
-    //       message: "当前为未登录状态或登录态过期请重新登录",
-    //       type: "error"
-    //     });
-    //     store.dispatch("user/logout");
-    //     router
-    //       .push(`/login?redirect=${router.currentRoute.fullPath}`)
-    //       .catch(() => {});
-    //   }
-    // }
+    const status = error.response.status;
+    const code = error.response.data.code; //"rest_forbidden"
+    console.log("router.currentRoute: ", router.currentRoute);
+    if (status === 401 && code === 401) {
+      if (router.currentRoute.fullPath.indexOf("/login") === -1) {
+        Message({
+          message: "当前为未登录状态或登录态过期请重新登录",
+          type: "error"
+        });
+        store.dispatch("user/logout");
+        router
+          .push(`/login?redirect=${router.currentRoute.fullPath}`)
+          .catch(() => {});
+      }
+    }
     return Promise.reject(error.response);
   }
 );

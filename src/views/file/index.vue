@@ -204,7 +204,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { treeData, createTableData } from "./data";
+// import { treeData, createTableData } from "./data";
 import Pagination from "@/components/Pagination";
 import Api from "@/api";
 
@@ -215,7 +215,6 @@ export default {
     Pagination
   },
   data() {
-    //https://github.com/sonicsunsky/airport-file-cli/blob/main/docs
     return {
       keyword: "",
       defaultProps: {
@@ -243,7 +242,6 @@ export default {
     this.total = 50;
     // this.catalogData = [...treeData];
     // this.generateTableData();
-
     await this.getDocumentCategory();
     await this.getDocumentList();
   },
@@ -315,7 +313,9 @@ export default {
           const host =
             process.env.NODE_ENV === "development"
               ? "http://by2.hjlinfo.top"
-              : "https://jc.cgoport.com";
+              : "http://by2.hjlinfo.top";
+          //https://jc.cgoport.com
+
           // const mimeList = ["pdf", "video", "image"];
           this.fileList = res.content.map((item, index) => {
             return {
@@ -334,26 +334,26 @@ export default {
         this.tableLoading = false;
       }
     },
-    generateTableData() {
-      this.tableLoading = true;
-      const size = Math.floor(Math.random() * 10 + 1);
-      // console.log(size);
-      setTimeout(() => {
-        const list = createTableData(size);
-        this.fileList = [...list];
-        this.tableLoading = false;
-      }, 500);
-    },
+    // generateTableData() {
+    //   this.tableLoading = true;
+    //   const size = Math.floor(Math.random() * 10 + 1);
+    //   // console.log(size);
+    //   setTimeout(() => {
+    //     const list = createTableData(size);
+    //     this.fileList = [...list];
+    //     this.tableLoading = false;
+    //   }, 500);
+    // },
     onSearchFileList() {
       if (this.keyword.trim() === "") return;
-      this.generateTableData();
+      // this.generateTableData();
       // this.getFileList();
     },
     fetchFileList({ page, limit }) {
       this.listQuery.page = page;
       this.listQuery.limit = limit;
       this.keyword = "";
-      this.generateTableData();
+      // this.generateTableData();
       // this.getFileList();
     },
     openFileDetail({ href = "", mime }) {
