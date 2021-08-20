@@ -9,8 +9,8 @@
     <div class="right-menu">
       <el-dropdown>
         <div class="user">
-          <el-avatar v-show="!hasLogin" icon="el-icon-user" :size="40" />
-          <el-avatar v-show="hasLogin" :src="userInfo.avatar" :size="40" />
+          <el-avatar v-if="userInfo.avatar" :src="userInfo.avatar" :size="40" />
+          <el-avatar v-else icon="el-icon-user" :size="40" />
         </div>
 
         <el-dropdown-menu slot="dropdown">

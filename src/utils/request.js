@@ -6,10 +6,18 @@ import { getStorage, setStorage } from "@/utils/auth";
 import qs from "qs";
 let loadingInstance = null;
 
+// dev: 'http://by2.hjlinfo.top/airport/api/v1.0',
+// prod: 'https://jc.cgoport.com/airport/api/v1.0',
+
 console.log(process.env);
+const baseURL =
+  process.env.NODE_ENV === "development"
+    ? "http://by2.hjlinfo.top/airport/api/v1.0"
+    : "https://jc.cgoport.com/airport/api/v1.0";
+
 // create an axios instance
 const service = axios.create({
-  baseURL: "https://jc.cgoport.com", // process.env.VUE_APP_BASE_API, // url = base url + request url, VUE_APP_BASE_LOCAL_API
+  baseURL, // process.env.VUE_APP_BASE_API
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000 // request timeout
 });
@@ -17,7 +25,6 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
-    // console.log("axios: ", config);
     loadingInstance = Loading.service({
       text: `加载中...`,
       background: `rgba(238, 245, 254, 0.8)`
@@ -26,6 +33,7 @@ service.interceptors.request.use(
     if (token) {
       config.headers["authorization"] = token;
     }
+    // console.log("axios: ", config.headers);
     // do something before request is sent
     if (config.method === "post") {
       config.data = qs.stringify(config.data);
@@ -55,30 +63,26 @@ service.interceptors.response.use(
   response => {
     loadingInstance && loadingInstance.close();
     const res = response.data;
-    if (res.refresh_token) {
-      //refresh_token
-      setStorage("token", res.refresh_token);
-    }
     return res;
   },
   error => {
     loadingInstance && loadingInstance.close();
-    console.log("err: ", error.response.data);
-    const status = error.response.status;
-    const code = error.response.data.code; //"rest_forbidden"
-    console.log("router.currentRoute: ", router.currentRoute);
-    if (status === 401 && code === 401) {
-      if (router.currentRoute.fullPath.indexOf("/login") === -1) {
-        Message({
-          message: "当前为未登录状态或登录态过期请重新登录",
-          type: "error"
-        });
-        store.dispatch("user/logout");
-        router
-          .push(`/login?redirect=${router.currentRoute.fullPath}`)
-          .catch(() => {});
-      }
-    }
+    console.log("err: ", error.response);
+    // const status = error.response.status;
+    // const code = error.response.data.code; //"rest_forbidden"
+    // console.log("router.currentRoute: ", router.currentRoute);
+    // if (status === 401 && code === 401) {
+    //   if (router.currentRoute.fullPath.indexOf("/login") === -1) {
+    //     Message({
+    //       message: "当前为未登录状态或登录态过期请重新登录",
+    //       type: "error"
+    //     });
+    //     store.dispatch("user/logout");
+    //     router
+    //       .push(`/login?redirect=${router.currentRoute.fullPath}`)
+    //       .catch(() => {});
+    //   }
+    // }
     return Promise.reject(error.response);
   }
 );

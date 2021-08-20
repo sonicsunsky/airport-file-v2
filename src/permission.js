@@ -8,15 +8,13 @@ import getPageTitle from "@/utils/get-page-title";
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-const whiteList = ["/login", "/file", "/document"]; // no redirect whitelist
+const whiteList = ["/login"]; // no redirect whitelist
 // const permissionRoles = ["administrator", "editor"];
 
 router.beforeEach(async (to, from, next) => {
   console.log("router.beforeEach: ", to);
-  if (to.path === "/file") {
-    if (to.query.token) {
-      setStorage("token", to.query.token);
-    }
+  if (to.path === "/file" && to.query.token) {
+    setStorage("token", to.query.token);
   }
   // start progress bar
   NProgress.start();
@@ -31,12 +29,14 @@ router.beforeEach(async (to, from, next) => {
   // const userRole = userInfo.user_role || "";
 
   if (hasToken) {
-    if (whiteList.indexOf(to.path) !== -1) {
-      next();
-    } else {
-      next(`/login?redirect=${to.fullPath}`);
-      NProgress.done();
-    }
+    next();
+    // if (whiteList.indexOf(to.path) !== -1) {
+    //   next();
+    // } else {
+    //   next();
+    //   next(`/login?redirect=${to.fullPath}`);
+    //   NProgress.done();
+    // }
   } else {
     /* has no token*/
     if (whiteList.indexOf(to.path) !== -1) {

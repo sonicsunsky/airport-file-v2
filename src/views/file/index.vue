@@ -37,6 +37,7 @@
     <template v-if="device === 'mobile'">
       <div class="lay-mobile">
         <el-tree
+          empty-text="目录为空"
           accordion
           default-expand-all
           :expand-on-click-node="false"
@@ -118,6 +119,7 @@
         <el-row type="flex" :gutter="10">
           <el-col :xs="8" :sm="8" :md="6" :lg="4" :xl="4">
             <el-tree
+              empty-text="目录为空"
               accordion
               default-expand-all
               :expand-on-click-node="false"
@@ -204,6 +206,7 @@
 import { mapGetters } from "vuex";
 import { treeData, createTableData } from "./data";
 import Pagination from "@/components/Pagination";
+import Api from "@/api";
 
 export default {
   name: "File",
@@ -216,8 +219,8 @@ export default {
     return {
       keyword: "",
       defaultProps: {
-        children: "children",
-        label: "label"
+        children: "child", //指定子树为节点对象的某个属性值
+        label: "name" //指定节点标签为节点对象的某个属性值
       },
       catalogData: [],
       total: 0,
@@ -236,15 +239,100 @@ export default {
       return this.$store.state.app.device;
     }
   },
-  created() {},
-  mounted() {
-    this.catalogData = [...treeData];
+  async created() {
     this.total = 50;
-    this.generateTableData();
+    // this.catalogData = [...treeData];
+    // this.generateTableData();
+
+    await this.getDocumentCategory();
+    await this.getDocumentList();
   },
+  mounted() {},
   methods: {
     closeDisclaimer() {
       this.$store.dispatch("app/closeDisclaimer");
+    },
+    handleTreeNodeClick(e) {
+      console.log(e);
+      this.categoryId = e.id;
+      this.getDocumentList();
+    },
+    loadNode(node, resolve) {
+      if (node.level === 0) {
+        return resolve([{ name: "region1" }, { name: "region2" }]);
+      }
+      if (node.level > 3) return resolve([]);
+
+      var hasChild;
+      if (node.data.name === "region1") {
+        hasChild = true;
+      } else if (node.data.name === "region2") {
+        hasChild = false;
+      } else {
+        hasChild = Math.random() > 0.5;
+      }
+
+      setTimeout(() => {
+        var data;
+        if (hasChild) {
+          data = [
+            {
+              name: "zone" + this.count++
+            },
+            {
+              name: "zone" + this.count++
+            }
+          ];
+        } else {
+          data = [];
+        }
+
+        resolve(data);
+      }, 500);
+    },
+    async getDocumentCategory() {
+      try {
+        const res = await Api.getDocumentCategory();
+        console.log(res);
+        if (res.code === 100) {
+          this.catalogData = res.content.slice();
+          this.categoryId = this.catalogData[0].id;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getDocumentList() {
+      this.tableLoading = true;
+      const params = {
+        categoryId: this.categoryId
+      };
+      try {
+        const res = await Api.getDocumentList(params);
+        console.log(res);
+        if (res.code === 100) {
+          this.tableLoading = false;
+          const host =
+            process.env.NODE_ENV === "development"
+              ? "http://by2.hjlinfo.top"
+              : "https://jc.cgoport.com";
+          // const mimeList = ["pdf", "video", "image"];
+          this.fileList = res.content.map((item, index) => {
+            return {
+              id: item.id,
+              name: item.name,
+              status: Math.random() > 0.5 ? "read" : "unread",
+              date: item.createTime, //YYYY-MM-DD HH:mm:ss
+              mime: "pdf",
+              download_url: `${host}/uploadDir${item.path}`,
+              href: `${host}/uploadDir${item.path}`
+            };
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        this.tableLoading = false;
+      }
     },
     generateTableData() {
       this.tableLoading = true;
@@ -255,10 +343,6 @@ export default {
         this.fileList = [...list];
         this.tableLoading = false;
       }, 500);
-    },
-    handleTreeNodeClick(e) {
-      // console.log(e);
-      this.generateTableData();
     },
     onSearchFileList() {
       if (this.keyword.trim() === "") return;
@@ -298,39 +382,6 @@ export default {
       document.body.appendChild(eLink);
       eLink.click();
       document.body.removeChild(eLink);
-    },
-    loadNode(node, resolve) {
-      if (node.level === 0) {
-        return resolve([{ name: "region1" }, { name: "region2" }]);
-      }
-      if (node.level > 3) return resolve([]);
-
-      var hasChild;
-      if (node.data.name === "region1") {
-        hasChild = true;
-      } else if (node.data.name === "region2") {
-        hasChild = false;
-      } else {
-        hasChild = Math.random() > 0.5;
-      }
-
-      setTimeout(() => {
-        var data;
-        if (hasChild) {
-          data = [
-            {
-              name: "zone" + this.count++
-            },
-            {
-              name: "zone" + this.count++
-            }
-          ];
-        } else {
-          data = [];
-        }
-
-        resolve(data);
-      }, 500);
     }
   }
 };

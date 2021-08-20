@@ -43,10 +43,6 @@ export default {
   mounted() {},
   methods: {
     getDocData() {
-      const baseUrl =
-        process.env.NODE_ENV === "production"
-          ? "http://by1.hjlinfo.top/web/viewer.html?file="
-          : "http://localhost:9527/web/viewer.html?file=";
       const { href, mime } = this.$route.query;
       this.docSrc = href;
       this.docType = mime;

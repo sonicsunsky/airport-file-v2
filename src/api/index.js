@@ -1,6 +1,6 @@
 // import * as User from "./user";
-import * as Book from "./book";
+import * as Document from "./document";
 
-const Api = Object.assign({}, Book);
+const Api = Object.assign({}, Document);
 
 export default Api;

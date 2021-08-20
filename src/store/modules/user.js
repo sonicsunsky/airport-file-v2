@@ -40,12 +40,13 @@ const actions = {
   async login({ commit }, data) {
     const res = await request({
       url: "/auth",
-      method: "POST",
+      method: "post",
       data
     });
+    console.log("store login: ", res);
     if (res.code === 100) {
-      // commit("setToken", res.content.token);
-      // commit("setUserInfo", res.content);
+      commit("setToken", res.content.token);
+      commit("setUserInfo", res.content);
     }
     return res;
   },

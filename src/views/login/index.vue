@@ -48,8 +48,14 @@ const initFormFields = () => {
     password: ""
   };
 };
+
 export default {
   name: "Login",
+  computed: {
+    device() {
+      return this.$store.state.app.device;
+    }
+  },
   data() {
     return {
       redirect: "",
@@ -95,7 +101,9 @@ export default {
       const { username, password } = this.userLoginForm;
       const params = {
         username,
-        password
+        password,
+        appid: "h5appid20210818",
+        platform: "h5_app"
       };
       this.$refs.userLoginForm.validate(valid => {
         if (valid) {
